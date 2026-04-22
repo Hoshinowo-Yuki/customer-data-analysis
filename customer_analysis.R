@@ -1,5 +1,32 @@
 # ==========================
-# E-COMMERCE CUSTOMER ANALYSIS
+# Customer Analysis Program
+# Version 1.01
+#
+# First created: 2023-06-05
+# Last updated: 2026-04-22
+# 
+# The MIT License (MIT)
+# 
+# Copyright (c) 2023-2026 Hoshino Yuki
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+#
 # ==========================
 
 # Load required libraries
@@ -11,9 +38,6 @@ library(randomForest)
 library(cluster)
 library(ggcorrplot)
 
-# ==========================
-# STEP 1: DATA SIMULATION
-# ==========================
 set.seed(123)  # Set seed for reproducibility
 
 # Simulate customer data
@@ -31,9 +55,6 @@ customer_data <- data.frame(
   IsPremiumMember = sample(c(0, 1), num_customers, replace = TRUE, prob = c(0.7, 0.3))
 )
 
-# ==========================
-# STEP 2: DATA CLEANING
-# ==========================
 # Check for missing values
 missing_values <- colSums(is.na(customer_data))
 print("Missing values in each column:")
@@ -47,9 +68,6 @@ customer_data <- customer_data %>%
   ) %>%
   drop_na()
 
-# ==========================
-# STEP 3: EXPLORATORY DATA ANALYSIS (EDA)
-# ==========================
 # Summary Statistics
 print("Summary of customer data:")
 print(summary(customer_data))
@@ -77,9 +95,6 @@ print(cor_matrix)
 cor_plot <- ggcorrplot(cor_matrix, lab = TRUE)
 print(cor_plot)
 
-# ==========================
-# STEP 4: CLUSTERING
-# ==========================
 # Scale numeric variables
 scaled_data <- scale(numeric_data)
 
@@ -95,11 +110,8 @@ cluster_plot <- ggplot(customer_data, aes(x = AnnualIncome, y = SpendingScore, c
   theme_minimal()
 print(cluster_plot)
 
-# ==========================
-# STEP 5: MACHINE LEARNING MODEL (CLASSIFICATION)
-# ==========================
-# Task: Predict if a customer is a premium member based on their features
 
+# Predict if a customer is a premium member based on their features
 # Split data into training and testing sets
 set.seed(123)
 train_index <- createDataPartition(customer_data$IsPremiumMember, p = 0.8, list = FALSE)
@@ -123,9 +135,6 @@ conf_matrix <- confusionMatrix(as.factor(rf_predictions), as.factor(test_data$Is
 print("Confusion Matrix:")
 print(conf_matrix)
 
-# ==========================
-# STEP 6: VISUALIZATION OF RESULTS
-# ==========================
 # Feature importance
 importance <- importance(rf_model)
 var_importance <- data.frame(Feature = rownames(importance), Importance = importance[, 1])
@@ -136,16 +145,10 @@ var_importance_plot <- ggplot(var_importance, aes(x = reorder(Feature, Importanc
   theme_minimal()
 print(var_importance_plot)
 
-# ==========================
-# STEP 7: SAVING THE DATA AND MODEL
-# ==========================
 # Save the clean data to a CSV file
 write.csv(customer_data, "clean_customer_data.csv", row.names = FALSE)
 
 # Save the trained model
 saveRDS(rf_model, "rf_model.rds")
 
-# ==========================
-# END OF PROGRAM
-# ==========================
-print("Program completed successfully!")
+
